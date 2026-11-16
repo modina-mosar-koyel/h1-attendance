@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Hasan Enterprise Attendance</title>
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#0b1d3a" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- TOP STATUS BAR -->
+  <header class="topbar">
+    <div class="brand">Hasan Enterprise</div>
+    <div id="syncBadge" class="badge badge-offline">Checking...</div>
+    <button id="adminBtn" class="icon-btn" aria-label="Admin">&#9881;</button>
+  </header>
+
+  <!-- MAIN SCAN SCREEN -->
+  <main id="scanScreen">
+    <div class="camera-wrap">
+      <video id="video" autoplay muted playsinline></video>
+      <canvas id="overlay"></canvas>
+      <div id="scanHint" class="scan-hint">Stand in front of the camera</div>
+    </div>
+
+    <div class="ot-toggle-row">
+      <button id="otToggle" class="ot-toggle">
+        <span class="ot-dot"></span>
+        <span id="otToggleLabel">REGULAR MODE</span>
+      </button>
+    </div>
+  </main>
+
+  <!-- FEEDBACK OVERLAY (big visual/audio confirmation) -->
+  <div id="feedbackOverlay" class="feedback-overlay hidden">
+    <div class="feedback-card">
+      <div id="feedbackCheck" class="feedback-check">&#10003;</div>
+      <img id="feedbackPhoto" class="feedback-photo" alt="" />
+      <div id="feedbackName" class="feedback-name">Name</div>
+      <div id="feedbackAction" class="feedback-action">Regular IN</div>
+      <div id="feedbackTime" class="feedback-time">00:00:00</div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminOverlay" class="admin-overlay hidden">
+    <div class="admin-sheet">
+
+      <!-- PIN GATE -->
+      <div id="pinGate" class="pin-gate">
+        <h2>Admin PIN</h2>
+        <input id="pinInput" type="password" inputmode="numeric" maxlength="6" placeholder="Enter PIN" />
+        <button id="pinSubmit" class="btn-primary">Unlock</button>
+        <p id="pinError" class="error-text hidden">Incorrect PIN</p>
+        <button id="pinCancel" class="btn-secondary">Cancel</button>
+      </div>
+
+      <!-- ADMIN CONTENT -->
+      <div id="adminContent" class="admin-content hidden">
+        <div class="admin-tabs">
+          <button class="tab-btn active" data-tab="register">Register</button>
+          <button class="tab-btn" data-tab="today">Today</button>
+          <button class="tab-btn" data-tab="queue">Sync Queue</button>
+          <button class="tab-btn" data-tab="monthly">Monthly</button>
+        </div>
+
+        <!-- Register employee -->
+        <section id="tab-register" class="tab-panel active">
+          <h3>Register New Employee</h3>
+          <input id="newEmpId" type="text" placeholder="Employee ID" />
+          <input id="newEmpName" type="text" placeholder="Employee Name" />
+          <div class="capture-wrap">
+            <video id="regVideo" autoplay muted playsinline></video>
+            <canvas id="regOverlay"></canvas>
+          </div>
+          <div id="regAngles" class="reg-angles">
+            <span class="angle-pill" data-n="1">Angle 1</span>
+            <span class="angle-pill" data-n="2">Angle 2</span>
+            <span class="angle-pill" data-n="3">Angle 3</span>
+          </div>
+          <button id="captureAngleBtn" class="btn-primary">Capture Face Angle</button>
+          <button id="saveEmployeeBtn" class="btn-primary" disabled>Save Employee</button>
+          <p id="regStatus" class="status-text"></p>
+        </section>
+
+        <!-- Today's attendance -->
+        <section id="tab-today" class="tab-panel">
+          <h3>Today's Attendance</h3>
+          <div id="todayList" class="data-list"></div>
+        </section>
+
+        <!-- Pending sync queue -->
+        <section id="tab-queue" class="tab-panel">
+          <h3>Pending Sync Queue</h3>
+          <button id="forceSyncBtn" class="btn-primary">Sync Now</button>
+          <div id="queueList" class="data-list"></div>
+        </section>
+
+        <!-- Monthly totals -->
+        <section id="tab-monthly" class="tab-panel">
+          <h3>Monthly Totals</h3>
+          <input id="monthPicker" type="month" />
+          <div id="monthlyList" class="data-list"></div>
+        </section>
+
+        <button id="adminCloseBtn" class="btn-secondary">Close</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- face-api.js loaded from CDN; cached by the Service Worker after first
+       successful load so recognition works 100% offline afterwards. -->
+  <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <script src="db.js"></script>
+  <script src="sync.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
